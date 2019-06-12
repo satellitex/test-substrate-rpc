@@ -1,0 +1,21 @@
+[package]
+name = "test-substrate-rpc"
+version = "0.1.0"
+authors = ["satellitex <s.a.t.e.3.ths@gmail.com>"]
+edition = "2018"
+
+[dependencies.sr-primitives]
+git = 'https://github.com/paritytech/substrate.git'
+package = 'substrate-primitives'
+tag = 'v1.0.0rc2'
+
+[dependencies.metadata]
+git = 'https://github.com/paritytech/substrate.git'
+package = 'srml-metadata'
+tag = 'v1.0.0rc2'
+
+[dependencies]
+jsonrpc-core-client = { git = "https://github.com/paritytech/jsonrpc", rev = "12b6210a11e449364d05b85c79187cb583acc5cb", features = ["ws"]}
+parity-codec = '3.2'
+futures = "0.1.26"
+tokio = "0.1"
