@@ -1,6 +1,6 @@
+use super::errors::Result;
 use super::*;
 use futures::Future;
-use jsonrpc_core::Result as RpcResult;
 use jsonrpc_core_client::transports::ws;
 use jsonrpc_core_client::{RpcChannel, RpcError, TypedClient};
 use jsonrpc_pubsub::{typed::Subscriber, SubscriptionId};
@@ -9,8 +9,6 @@ use sr_rpc::chain::*;
 use tokio;
 
 use std::cell::RefCell;
-
-pub type Result<T> = std::result::Result<T, jsonrpc_core_client::RpcError>;
 
 pub struct SubstrateClient<Number, Hash, Header, SignedBlock> {
     runtime: tokio::runtime::Runtime,
@@ -32,12 +30,17 @@ where
     ///
     /// By default returns latest block hash.
     pub fn latest_block_hash(&self) -> Result<Option<Hash>> {
-        self.chain_client.borrow_mut().block_hash(None).wait()
+        self.chain_client
+            .borrow_mut()
+            .block_hash(None)
+            .wait()
+            .map_err(Into::into)
     }
 
     pub fn new(uri: &str) -> Result<Self> {
         let mut runtime = tokio::runtime::Runtime::new()?;
-        let chain_client = runtime.block_on(ws::connect::<ChainClient<Number, Hash, Header, SignedBlock>>(uri)?)?;
+        let chain_client = runtime
+            .block_on(ws::connect::<ChainClient<Number, Hash, Header, SignedBlock>>(uri)?)?;
 
         Ok(SubstrateClient {
             runtime: runtime,

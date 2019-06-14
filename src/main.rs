@@ -11,6 +11,7 @@ use node_primitives::{BlockNumber, Hash};
 use node_runtime::{Header, Block};
 
 mod client;
+mod errors;
 
 const LOCAL_URL: &str = "ws://127.0.0.1:9944";
 
