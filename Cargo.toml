@@ -28,18 +28,6 @@ git = 'https://github.com/paritytech/substrate.git'
 package = 'substrate-rpc'
 rev = "bdb87ddab9062cf2d1269e90736cab633d28fe52"
 
-[dependencies.node-runtime]
-default-features = false
-git = 'https://github.com/paritytech/substrate.git'
-package = 'node-runtime'
-rev = "bdb87ddab9062cf2d1269e90736cab633d28fe52"
-
-[dependencies.node-primitives]
-default-features = false
-git = 'https://github.com/paritytech/substrate.git'
-package = 'node-primitives'
-rev = "bdb87ddab9062cf2d1269e90736cab633d28fe52"
-
 [dependencies]
 jsonrpc-core-client = { optional = true, features = ["ws"]}
 jsonrpc-core = { optional = true }
@@ -57,8 +45,6 @@ std = [
     "sr-primitives/std",
     "substrate-primitives/std",
     "metadata/std",
-    "node-runtime/std",
-    "node-primitives/std",
     "parity-codec/std",
     "sr-rpc",
     "jsonrpc-core-client",

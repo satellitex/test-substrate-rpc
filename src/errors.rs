@@ -1,8 +1,6 @@
-
 /* ----------- failure boilerplate ----------- */
 
 use failure::{Backtrace, Context, Fail};
-use futures::future::err;
 use std::fmt;
 use std::fmt::Display;
 
@@ -68,10 +66,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum ErrorKind {
     #[fail(display = "IO error")]
     Io,
-    #[fail(display = "Serde error")]
-    Serde,
-    #[fail(display = "service error")]
-    Service,
     #[fail(display = "JSON RPC error")]
     JSONRpc(RpcError),
     #[fail(display = "JSON RPC core error")]
