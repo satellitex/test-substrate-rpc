@@ -15,7 +15,7 @@ fn main() {
     println!("Get Hash: {:?}", hash);
 
     let metadata = client.metadata(hash.unwrap());
-    println!("Get Hash: {:?}", metadata);
+    println!("Get Metadata: {:?}", metadata);
 
     client.shutdown();
 }
