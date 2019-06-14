@@ -26,6 +26,21 @@ where
     Number: serde::ser::Serialize + std::marker::Send + std::marker::Sync,
     SignedBlock: std::marker::Send + std::marker::Sync + serde::de::DeserializeOwned,
 {
+    pub fn new(uri: &str) -> Result<Self> {
+        let mut runtime = tokio::runtime::Runtime::new()?;
+        let chain_client = runtime
+            .block_on(
+                ws::connect::<ChainClient<Number, Hash, Header, SignedBlock>>(uri)
+                    .map_err(|e| <errors::Error as From<_>>::from(e))?,
+            )
+            .map_err(|e| <errors::Error as From<_>>::from(e))?;
+
+        Ok(SubstrateClient {
+            runtime: runtime,
+            chain_client: RefCell::new(chain_client),
+        })
+    }
+
     /// Get hash of the n-th block in the canon chain.
     ///
     /// By default returns latest block hash.
@@ -36,18 +51,9 @@ where
             .wait()
             .map_err(Into::into)
     }
+}
 
-    pub fn new(uri: &str) -> Result<Self> {
-        let mut runtime = tokio::runtime::Runtime::new()?;
-        let chain_client = runtime
-            .block_on(ws::connect::<ChainClient<Number, Hash, Header, SignedBlock>>(uri)?)?;
-
-        Ok(SubstrateClient {
-            runtime: runtime,
-            chain_client: RefCell::new(chain_client),
-        })
-    }
-
+impl<Number, Hash, Header, SignedBlock> SubstrateClient<Number, Hash, Header, SignedBlock> {
     pub fn shutdown(self) -> std::result::Result<(), ()> {
         self.runtime.shutdown_now().wait()
     }

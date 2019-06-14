@@ -1,57 +1,3 @@
-use jsonrpc_core_client::RpcError;
-use sr_rpc::chain::error::Error as ChainError;
-use std::io::Error as IOError;
-
-pub type Result<T> = std::result::Result<T, Error>;
-
-#[derive(Fail, Debug)]
-pub enum ErrorKind {
-    #[fail(display = "IO error")]
-    Io,
-    #[fail(display = "Serde error")]
-    Serde,
-    #[fail(display = "service error")]
-    Service,
-    #[fail(display = "JSON RPC error")]
-    JSONRpc(RpcError),
-    #[fail(display = "JSON RPC core error")]
-    JSONRpcCore(jsonrpc_core::Error),
-    #[fail(display = "{}", _0)]
-    Other(failure::Error),
-}
-
-impl From<IOError> for Error {
-    fn from(error: IOError) -> Self {
-        Error {
-            inner: error.context(ErrorKind::Io),
-        }
-    }
-}
-
-impl From<RpcError> for Error {
-    fn from(error: RpcError) -> Self {
-        Error {
-            inner: error.context(ErrorKind::JSONRpc(error)),
-        }
-    }
-}
-
-impl From<jsonrpc_core::Error> for Error {
-    fn from(error: jsonrpc_core::Error) -> Self {
-        Error {
-            inner: error.context(ErrorKind::JSONRpcCore(error)),
-        }
-    }
-}
-
-//
-//impl From<ChainError> for Error {
-//    fn from(error: ChainError) -> Error {
-//        Error {
-//            inner: Context::new(ErrorKind::ChainError(error)),
-//        }
-//    }
-//}
 
 /* ----------- failure boilerplate ----------- */
 
@@ -109,6 +55,51 @@ impl From<failure::Error> for Error {
     fn from(error: failure::Error) -> Error {
         Error {
             inner: Context::new(ErrorKind::Other(error)),
+        }
+    }
+}
+
+use jsonrpc_core_client::RpcError;
+use std::io::Error as IOError;
+
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Fail, Debug)]
+pub enum ErrorKind {
+    #[fail(display = "IO error")]
+    Io,
+    #[fail(display = "Serde error")]
+    Serde,
+    #[fail(display = "service error")]
+    Service,
+    #[fail(display = "JSON RPC error")]
+    JSONRpc(RpcError),
+    #[fail(display = "JSON RPC core error")]
+    JSONRpcCore(jsonrpc_core::Error),
+    #[fail(display = "{}", _0)]
+    Other(failure::Error),
+}
+
+impl From<IOError> for Error {
+    fn from(error: IOError) -> Self {
+        Error {
+            inner: error.context(ErrorKind::Io),
+        }
+    }
+}
+
+impl From<RpcError> for Error {
+    fn from(error: RpcError) -> Self {
+        Error {
+            inner: Context::new(ErrorKind::JSONRpc(error)),
+        }
+    }
+}
+
+impl From<jsonrpc_core::Error> for Error {
+    fn from(error: jsonrpc_core::Error) -> Self {
+        Error {
+            inner: Context::new(ErrorKind::JSONRpcCore(error)),
         }
     }
 }

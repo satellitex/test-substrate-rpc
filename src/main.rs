@@ -17,7 +17,7 @@ const LOCAL_URL: &str = "ws://127.0.0.1:9944";
 
 
 fn main() {
-    let client = client::SubstrateClient::<BlockNumber, Hash, Header, generic::SignedBlock<Block>>::new(LOCAL_URL).unwrap();
-    let hash = client.latest_block_hash();
-    println!("Get Hash: {:?}", hash);
+//    let client = client::SubstrateClient::<BlockNumber, Hash, Header, generic::SignedBlock<Block>>::new(LOCAL_URL).unwrap();
+//    let hash = client.latest_block_hash();
+//    println!("Get Hash: {:?}", hash);
 }
